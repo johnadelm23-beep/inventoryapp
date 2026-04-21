@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inventory_app/core/widgets/app_button.dart';
 import 'package:inventory_app/core/widgets/custom_text_form_field.dart';
 import 'package:inventory_app/features/home/ui/home_screen.dart';
-import 'package:flutter_svg/svg.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
@@ -11,6 +10,7 @@ class RegisterScreen extends StatelessWidget {
   final _emailControlller = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordControoler = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +37,7 @@ class RegisterScreen extends StatelessWidget {
                             return "من فضلك ادخل اسم يحتوي علي 4 احرف او اكثر";
                           }
                         },
+                        keyboardType: .name,
                       ),
                       CustomTextFormField(
                         hintText: "الايميل",
@@ -46,6 +47,7 @@ class RegisterScreen extends StatelessWidget {
                             return "هذا الحقل مطلوب";
                           }
                         },
+                        keyboardType: .emailAddress,
                       ),
                       CustomTextFormField(
                         hintText: "كلمة المرور",
@@ -58,6 +60,7 @@ class RegisterScreen extends StatelessWidget {
                             return "كلمة المرور ضعيفة";
                           }
                         },
+                        keyboardType: .visiblePassword,
                       ),
                       CustomTextFormField(
                         hintText: "تاكيد كلمة المرور",
@@ -70,6 +73,7 @@ class RegisterScreen extends StatelessWidget {
                             return "كلمة المرور غير صحيحة";
                           }
                         },
+                        keyboardType: .visiblePassword,
                       ),
                       SizedBox(height: 50),
                       AppButton(

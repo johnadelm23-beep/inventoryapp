@@ -37,6 +37,7 @@ class AuthScreen extends StatelessWidget {
                               return "هذا الحقل مطلوب";
                             }
                           },
+                          keyboardType: .emailAddress,
                         ),
                         const SizedBox(height: 20),
                         CustomTextFormField(
@@ -48,6 +49,7 @@ class AuthScreen extends StatelessWidget {
                               return "هذا الحقل مطلوب";
                             }
                           },
+                          keyboardType: .visiblePassword,
                         ),
                         const SizedBox(height: 50),
                         AppButton(
@@ -75,7 +77,7 @@ class AuthScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   InkWell(
                     onTap: () {},
                     child: Container(
