@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # inventory_app
 
 A new Flutter project.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# inventoryapp
+>>>>>>> 6f19f175eef9ccd9962b0cb9e9db3446084e9f0b
