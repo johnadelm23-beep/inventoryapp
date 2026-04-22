@@ -89,13 +89,29 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(height: 50.h),
                       BlocListener<AuthCubit, AuthState>(
                         listener: (context, state) {
-                    if(state is AuthSuccessState){
-                      Navigator.push(context, MaterialPageRoute(builder: (c)=>HomeScreen()),
-                      );
-
-                    }
-
-
+                          if (state is AuthLoadingState) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          } else if (state is AuthSuccessState) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (c) => HomeScreen()),
+                            );
+                          } else if (state is AuthErrorState) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(state.errorMessage),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         },
                         child: AppButton(
                           text: "انشاء الحساب",
