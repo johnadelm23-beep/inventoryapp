@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inventory_app/core/widgets/app_button.dart';
 import 'package:inventory_app/core/widgets/custom_text_form_field.dart';
 import 'package:inventory_app/features/auth/ui/register_screen.dart';
 import 'package:inventory_app/features/home/ui/home_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../cubit/auth_cubit.dart';
+
 class AuthScreen extends StatelessWidget {
   AuthScreen({super.key});
+
   final _emailController = TextEditingController();
   final _passswordController = TextEditingController();
   final _key = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,12 +24,12 @@ class AuthScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 50),
+              padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 50.w),
               child: Column(
                 mainAxisAlignment: .center,
                 children: [
-                  Text("Inventory App", style: TextStyle(fontSize: 40)),
-                  const SizedBox(height: 100),
+                  Text("Inventory App", style: TextStyle(fontSize: 40.sp)),
+                  SizedBox(height: 100.h),
                   Form(
                     key: _key,
                     child: Column(
@@ -36,10 +42,11 @@ class AuthScreen extends StatelessWidget {
                             if (v == null || v.isEmpty) {
                               return "هذا الحقل مطلوب";
                             }
+                            return null;
                           },
                           keyboardType: .emailAddress,
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         CustomTextFormField(
                           hintText: "كلمة المرور",
                           obscureText: true,
@@ -48,23 +55,50 @@ class AuthScreen extends StatelessWidget {
                             if (v == null || v.isEmpty) {
                               return "هذا الحقل مطلوب";
                             }
+                            return null;
                           },
                           keyboardType: .visiblePassword,
                         ),
-                        const SizedBox(height: 50),
-                        AppButton(
-                          text: "تسجيل دخول",
-                          onPressed: () {
-                            if (_key.currentState!.validate()) {
-                              Navigator.pushAndRemoveUntil(
+                        SizedBox(height: 50.h),
+                        BlocListener<AuthCubit, AuthState>(
+                          listener: (context, state) {
+                            if (state is AuthLoadingState) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else if (state is AuthSuccessState) {
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(builder: (c) => HomeScreen()),
-                                (e) => false,
+                              );
+                            } else if (state is AuthErrorState) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.errorMessage),
+                                  backgroundColor: Colors.red,
+                                ),
                               );
                             }
                           },
+                          child: AppButton(
+                            text: "تسجيل دخول",
+                            onPressed: () {
+                              if (_key.currentState!.validate()) {
+                                context.read<AuthCubit>().login(
+                                      email: _emailController.text,
+                                      password: _passswordController.text,
+                                    );
+                              }
+                            },
+                          ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                       ],
                     ),
                   ),
@@ -73,31 +107,64 @@ class AuthScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (c) => RegisterScreen()),
+                        MaterialPageRoute(builder: (c) =>
+                            BlocProvider(
+                              create: (context) => AuthCubit(),
+                              child: RegisterScreen(),
+                            )),
                       );
                     },
                   ),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey.shade200,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: .center,
-                        children: [
-                          SvgPicture.asset('assets/icons/google.svg'),
-                          SizedBox(width: 5),
-                          Center(
-                            child: Text(
-                              "تسجيل الدخول بحساب جوجل",
-                              style: TextStyle(fontSize: 25),
-                            ),
+                  SizedBox(height: 20.h),
+                  BlocListener<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthLoadingState) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => const Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        ],
+                        );
+                      } else if (state is AuthSuccessState) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (c) => HomeScreen()),
+                        );
+                      } else if (state is AuthErrorState) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.errorMessage),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    child: InkWell(
+                      onTap: () {
+                        context.read<AuthCubit>().signInWithGoogle();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 20.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.r),
+                          color: Colors.grey.shade200,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: .center,
+                          children: [
+                            SvgPicture.asset('assets/icons/google.svg'),
+                            SizedBox(width: 5.w),
+                            Center(
+                              child: Text(
+                                "تسجيل الدخول بحساب جوجل",
+                                style: TextStyle(fontSize: 15.sp),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

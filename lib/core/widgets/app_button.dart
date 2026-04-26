@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:inventory_app/core/theme/app_colors.dart';
 
 class AppButton extends StatelessWidget {
@@ -11,12 +12,12 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(12),
+          borderRadius: BorderRadiusGeometry.circular(12.r),
         ),
         minimumSize: Size(350, 70),
       ),
       onPressed: onPressed,
-      child: Text(text, style: TextStyle(fontSize: 25, color: Colors.white)),
+      child: Text(text, style: TextStyle(fontSize: 15.sp, color: Colors.white)),
     );
   }
 }
